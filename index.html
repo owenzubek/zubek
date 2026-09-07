@@ -107,10 +107,21 @@
   @media (max-width:1000px){ .work-grid{ grid-template-columns:repeat(2,1fr); } }
   @media (max-width:560px){ .work-grid{ grid-template-columns:1fr; gap:32px; } }
   .feed-frame{
-    position:relative; width:100%; aspect-ratio:4/3; overflow:hidden;
+    position:relative; width:100%; aspect-ratio:4/3; overflow:hidden; display:block; background:#000;
+  }
+  div.feed-frame{
     background:
       repeating-linear-gradient(135deg, var(--ink) 0 2px, transparent 2px 5px),
       linear-gradient(160deg, var(--paper-dim), var(--ink) 140%);
+  }
+  video.feed-frame{ object-fit:cover; }
+  .feed-frame img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .feed-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .yt-frame{ cursor:pointer; background:#000; }
+  .yt-play{
+    position:absolute; inset:0; margin:auto; width:0; height:0;
+    border-style:solid; border-width:14px 0 14px 24px; border-color:transparent transparent transparent rgba(255,255,255,.92);
+    filter:drop-shadow(0 1px 6px rgba(0,0,0,.6));
   }
   .feed-cap{ padding-top:14px; }
   .feed-client{ font-family:var(--font-mono); font-weight:700; font-size:15px; letter-spacing:.01em; text-transform:uppercase; }
@@ -255,24 +266,49 @@
   const PROJECTS = [
     {client:"Machine Gun Kelly", title:"Mall B — MGK Day", location:"Cleveland, OH", tag:"branded", year:"2019"},
     {client:"Denzel Ward", title:"Union Home Mortgage Campaign", location:"The James Douglas Studio, Cleveland, OH", tag:"branded", year:"2021"},
-    {client:"Trippie Redd", title:"Pray 4 Us — Official Music Video", location:"Cleveland, OH", tag:"music videos", year:"2018"},
-    {client:"Bay State 150", title:"Official Documentary", location:"Ohio", tag:"documentary", year:"2020"},
+    {client:"Trippie Redd", title:"Pray 4 Us — Official Music Video", location:"Cleveland, OH", tag:"music videos", year:"2018", youtube:"RC_10yqP8dE"},
+    {client:"Trippie Redd", title:"1716 Osage — Official Music Video", location:"", tag:"music videos", year:"2023", youtube:"IKlgk0gF_fE"},
+    {client:"Bay State 150", title:"Official Documentary", location:"Ohio", tag:"documentary", year:"2020", youtube:"hgCk-uwjS5A"},
     {client:"Groundworks Land Design", title:"Lookbook 12", location:"Westlake, OH", tag:"aerial", year:"2022"},
     {client:"J Roc Development", title:"Electric Gardens", location:"Tremont, OH", tag:"aerial", year:"2021"},
     {client:"YFL DC", title:"Lakewood Skatepark", location:"Lakewood, OH", tag:"branded", year:"2020"},
-    {client:"Lululemon", title:"Fall Team Portraits", location:"Westlake, OH", tag:"photography", year:"2018"}
+    {client:"Lululemon", title:"Fall Team Portraits", location:"Westlake, OH", tag:"photography", year:"2018"},
+    {client:"Energi Studios", title:"Brand Film", location:"", tag:"branded", year:"2026", video:"energi"},
+    {client:"Nosotros Industries", title:"Rock Climbing Gym Promo", location:"", tag:"branded", year:"2026", video:"nosotros"},
+    {client:"Vital Life Chiropractic", title:"Brand Film", location:"", tag:"branded", year:"2026", video:"vital"},
+    {client:"NuIQ Wellness", title:"Wellness Lounge & Med Spa", location:"", tag:"branded", year:"2026", video:"nuiq"},
+    {client:"SpringHill Company", title:"Maxmillian Peralta — King James Portrait", location:"", tag:"branded", year:"2021", video:"kingjames"},
+    {client:"The Crew Has It", title:"Jerry Ferrara — Ep. 96", location:"Cleveland, OH", tag:"branded", year:"2026", youtube:"sS6uYLSTKNk"}
   ];
   const FILTERS = ["all","branded","music videos","documentary","aerial","photography"];
   const TAG_LABELS = { branded:"Branded", "music videos":"Music Video", documentary:"Documentary", aerial:"Aerial", photography:"Photography" };
 
   function feedItemHTML(p){
+    let frame;
+    if(p.video){
+      frame = `<video class="feed-frame" poster="media/${p.video}.jpg" controls preload="none" playsinline>
+        <source src="media/${p.video}.mp4" type="video/mp4">
+      </video>`;
+    } else if(p.youtube){
+      frame = `<div class="feed-frame yt-frame" data-yt="${p.youtube}" onclick="loadYouTube(this)">
+        <img src="https://img.youtube.com/vi/${p.youtube}/hqdefault.jpg" alt="">
+        <span class="yt-play" aria-hidden="true"></span>
+      </div>`;
+    } else {
+      frame = `<div class="feed-frame"></div>`;
+    }
     return `<div class="feed-item" data-tag="${p.tag}">
-      <div class="feed-frame"></div>
+      ${frame}
       <div class="feed-cap">
         <div class="feed-client">${p.client} | ${p.title}</div>
         <div class="feed-meta">${TAG_LABELS[p.tag]}</div>
       </div>
     </div>`;
+  }
+
+  function loadYouTube(el){
+    const id = el.dataset.yt;
+    el.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" title="YouTube video" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
   }
 
   function renderFeed(filter){

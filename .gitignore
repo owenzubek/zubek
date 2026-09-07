@@ -1,0 +1,7 @@
+# Raw video masters — too large for git/Vercel; only the compressed
+# previews in media/ are meant to ship with the site.
+/energi_2.mp4
+/kingjames.mp4
+/NUIQ_4K_Full_8.26.26.m4v
+/VITAL.m4v
+/nosotros industries promo2.m4v
