@@ -51,14 +51,8 @@
   .btn-primary:hover{ background:var(--red); border-color:var(--red); }
 
   /* ================= HERO ================= */
-  #hero{ position:relative; height:min(100vh,860px); min-height:520px; overflow:hidden; background:var(--ink); }
-  .hero-yt{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
-  .hero-yt iframe{
-    position:absolute; top:50%; left:50%;
-    width:100vw; height:56.25vw;
-    min-width:177.78vh; min-height:100vh;
-    transform:translate(-50%,-50%);
-  }
+  #hero{ position:relative; height:100vh; min-height:560px; overflow:hidden; background:var(--ink); }
+  #hero video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
   #hero::after{
     content:""; position:absolute; inset:0; z-index:1;
     background:linear-gradient(180deg, rgba(21,19,14,.15) 0%, rgba(21,19,14,0) 30%, rgba(21,19,14,0) 55%, rgba(21,19,14,.75) 100%);
@@ -202,9 +196,7 @@
 
 <!-- ============ HERO ============ -->
 <section id="hero">
-  <div class="hero-yt">
-    <iframe src="https://www.youtube.com/embed/r_6-hlE0uKk?autoplay=1&mute=1&loop=1&playlist=r_6-hlE0uKk&controls=0&modestbranding=1&playsinline=1&rel=0&showinfo=0&iv_load_policy=3" title="the hills_banner" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  </div>
+  <video autoplay muted loop playsinline preload="auto" disablePictureInPicture disableRemotePlayback src="media/hero.mp4"></video>
   <div class="hero-hint">
     <p>SCROLL DOWN TO SEE WORK</p>
     <div class="chev" aria-hidden="true"></div>
