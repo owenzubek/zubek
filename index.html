@@ -100,7 +100,9 @@
     position:absolute; width:189.2%; max-width:none; left:-46.7%; top:-68.8%; user-select:none;
   }
 
-  .hero-hint{ position:absolute; left:0; right:0; bottom:28px; z-index:3; text-align:center; color:var(--paper); }
+  .hero-hint{ position:absolute; left:0; right:0; bottom:28px; z-index:3; text-align:center; color:var(--paper); text-decoration:none; cursor:pointer; }
+  .hero-hint:hover p{ color:var(--red); }
+  .hero-hint:hover .chev{ border-color:var(--red); }
   .hero-hint p{ font-family:var(--font-mono); font-size:11px; letter-spacing:.12em; }
   .hero-hint .chev{ margin:10px auto 0; width:16px; height:16px; border-right:1px solid var(--paper); border-bottom:1px solid var(--paper); transform:rotate(45deg); animation:bob 2s ease-in-out infinite; }
   @keyframes bob{ 0%,100%{ transform:rotate(45deg) translate(0,0); } 50%{ transform:rotate(45deg) translate(4px,4px); } }
@@ -197,10 +199,10 @@
 <!-- ============ HERO ============ -->
 <section id="hero">
   <video autoplay muted loop playsinline preload="auto" disablePictureInPicture disableRemotePlayback src="media/hero.mp4"></video>
-  <div class="hero-hint">
+  <a href="#work" class="hero-hint">
     <p>SCROLL DOWN TO SEE WORK</p>
     <div class="chev" aria-hidden="true"></div>
-  </div>
+  </a>
 </section>
 
 <!-- ============ WORK ============ -->
