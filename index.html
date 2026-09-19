@@ -32,7 +32,8 @@
     font-family:var(--font-mono); font-size:11px; letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-soft);
   }
-  .wrap{max-width:1000px; margin:0 auto; padding:0 28px;}
+  .wrap{max-width:1000px; margin:0 auto; padding:0 40px;}
+  @media (max-width:560px){ .wrap{ padding:0 24px; } }
   .section{padding:72px 0;}
   .display{
     font-family:var(--font-display); font-weight:900; text-transform:uppercase;
@@ -72,6 +73,8 @@
   }
   .nav-links a:hover{ color:var(--red); }
   .nav-links a .n{ color:var(--red); }
+  .nav-links a.cta{ color:var(--red); font-weight:700; }
+  .nav-links a.cta:hover{ color:var(--paper); }
 
   .menu-btn{
     display:none; width:26px; height:16px; flex-direction:column; justify-content:space-between;
@@ -82,12 +85,23 @@
   @media (max-width:720px){
     .menu-btn{ display:flex; }
     .nav-links{
-      display:none; position:absolute; top:100%; left:0; right:0;
-      flex-direction:column; gap:0; padding:4px 0;
-      background:var(--ink); border-bottom:1px solid rgba(255,255,255,.12);
+      display:flex; position:absolute; top:100%; left:0; right:0;
+      flex-direction:column; gap:0; padding:0;
+      background:rgba(90,87,80,.42); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.12);
+      transform-origin:top right;
+      transform:scale(.85) translateY(-10px);
+      opacity:0; pointer-events:none;
+      transition:transform .3s cubic-bezier(.2,.8,.2,1), opacity .22s ease;
     }
-    .nav-links.open{ display:flex; }
-    .nav-links a{ padding:16px 26px; border-top:1px solid rgba(255,255,255,.08); }
+    .nav-links.open{ transform:scale(1) translateY(0); opacity:1; pointer-events:auto; }
+    .nav-links a{
+      padding:16px 26px; border-top:1px solid rgba(255,255,255,.08);
+      transition:background .15s ease;
+    }
+    .nav-links a:first-child{ border-top:0; }
+    .nav-links a:hover, .nav-links a:active, .nav-links a:focus{ background:rgba(0,0,0,.22); }
+    @media (prefers-reduced-motion:reduce){ .nav-links{ transition:none; } }
   }
 
   .coin{ perspective:600px; width:72px; height:40px; aspect-ratio:1.778; }
@@ -100,13 +114,14 @@
     position:absolute; width:189.2%; max-width:none; left:-46.7%; top:-68.8%; user-select:none;
   }
 
-  .hero-hint{ position:absolute; left:0; right:0; bottom:28px; z-index:3; text-align:center; color:var(--paper); text-decoration:none; cursor:pointer; }
-  .hero-hint:hover p{ color:var(--red); }
-  .hero-hint:hover .chev{ border-color:var(--red); }
-  .hero-hint p{ font-family:var(--font-mono); font-size:11px; letter-spacing:.12em; }
-  .hero-hint .chev{ margin:10px auto 0; width:16px; height:16px; border-right:1px solid var(--paper); border-bottom:1px solid var(--paper); transform:rotate(45deg); animation:bob 2s ease-in-out infinite; }
-  @keyframes bob{ 0%,100%{ transform:rotate(45deg) translate(0,0); } 50%{ transform:rotate(45deg) translate(4px,4px); } }
-  @media (prefers-reduced-motion:reduce){ .hero-hint .chev{ animation:none; } }
+  .hero-cta{
+    position:absolute; left:50%; bottom:40px; z-index:3; transform:translateX(-50%);
+    font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--paper); text-decoration:none; background:rgba(21,19,14,.08);
+    border:1px solid rgba(232,227,214,.55); padding:14px 30px;
+    transition:border-color .2s ease, color .2s ease, background .2s ease;
+  }
+  .hero-cta:hover{ border-color:var(--red); color:var(--red); background:rgba(21,19,14,.2); }
 
   /* ================= WORK grid ================= */
   .wrap-wide{ max-width:1400px; margin:0 auto; padding:0 28px; }
@@ -158,21 +173,42 @@
   .portrait-frame img{ width:100%; height:100%; object-fit:cover; display:block; }
   .about-bio{ font-size:17px; line-height:1.65; max-width:64ch; }
   .about-bio + .about-bio{ margin-top:16px; color:var(--ink-soft); font-size:15px; }
-  .meta-table{ border-top:1px solid var(--line); max-width:640px; }
+  .meta-table{ border-top:1px solid var(--line); max-width:560px; margin-left:auto; margin-right:auto; }
   .about-bottom{
     display:grid; grid-template-columns:1.3fr 1fr; gap:56px;
     margin-top:56px; border-top:1px solid var(--line); padding-top:40px;
   }
   @media (max-width:720px){ .about-bottom{ grid-template-columns:1fr; gap:36px; } }
-  .client-list{
-    list-style:none; margin:16px 0 0; padding:0; columns:2; column-gap:32px;
-    font-size:15px; line-height:2;
+  .client-logos{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:20px;
   }
-  @media (max-width:480px){ .client-list{ columns:1; } }
-  .client-list li{ break-inside:avoid; }
-  .meta-row{ display:flex; justify-content:space-between; gap:16px; padding:13px 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:12px; }
-  .meta-row span:first-child{ color:var(--ink-soft); text-transform:lowercase; letter-spacing:.06em; }
-  .meta-row span:last-child{ text-align:right; }
+  @media (max-width:720px){ .client-logos{ grid-template-columns:repeat(3,1fr); } }
+  @media (max-width:480px){ .client-logos{ grid-template-columns:repeat(2,1fr); } }
+  .client-logos .logo-cell{
+    display:flex; align-items:center; justify-content:center;
+    height:64px; padding:8px;
+  }
+  .client-logos img{
+    max-width:100%; max-height:38px; width:auto; height:auto;
+    object-fit:contain; filter:grayscale(1) contrast(1.35) brightness(.9) opacity(.8);
+  }
+  .client-logos img.invert{ filter:invert(1) grayscale(1) contrast(1.35) brightness(.9) opacity(.7); }
+  .contact-block{
+    background:var(--paper-dim); border-left:3px solid var(--red);
+    padding:26px 30px; align-self:start; text-align:center;
+  }
+  .contact-email{ margin-top:14px; }
+  .contact-email a{
+    font-family:var(--font-display); font-weight:900; font-size:clamp(20px,2.4vw,28px);
+    color:var(--ink); text-decoration:none; border-bottom:2px solid var(--red);
+  }
+  .contact-email a:hover{ color:var(--red); }
+  .contact-ig{ margin-top:12px; font-family:var(--font-mono); font-size:13px; color:var(--ink-soft); }
+  .contact-ig a{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line); }
+  .contact-ig a:hover{ color:var(--red); border-color:var(--red); }
+  .meta-row{ display:flex; justify-content:center; gap:16px; padding:13px 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:12px; }
+  .meta-row span:first-child{ flex:0 0 130px; text-align:right; color:var(--ink-soft); text-transform:lowercase; letter-spacing:.06em; }
+  .meta-row span:last-child{ flex:0 0 340px; text-align:left; }
 
 
   /* ================= footer ================= */
@@ -193,16 +229,14 @@
     <a href="#hero"><span class="n">01.</span>Reel</a>
     <a href="#work"><span class="n">02.</span>Work</a>
     <a href="#about"><span class="n">03.</span>About</a>
+    <a href="#contact" class="cta">Start a Project</a>
   </div>
 </nav>
 
 <!-- ============ HERO ============ -->
 <section id="hero">
   <video autoplay muted loop playsinline preload="auto" disablePictureInPicture disableRemotePlayback src="media/hero.mp4"></video>
-  <a href="#work" class="hero-hint">
-    <p>SCROLL DOWN TO SEE WORK</p>
-    <div class="chev" aria-hidden="true"></div>
-  </a>
+  <a href="#contact" class="hero-cta">Start a Project</a>
 </section>
 
 <!-- ============ WORK ============ -->
@@ -219,53 +253,49 @@
     <div class="about-top">
       <div class="portrait-frame"><img class="portrait-img" alt="Owen Zubek on set"></div>
       <div>
-        <p class="eyebrow">Biography</p>
-        <p class="about-bio" style="margin-top:16px;">ZUBEK is a Cleveland-based commercial video production company specializing in branded content, music videos, and documentary work, with photography available on request. The studio holds FAA Part 107 certification, and aerial coverage is brought in whenever a production calls for it. Founded and directed by Owen Zubek, whose credits include Trippie Redd, Brooks Running, and Güdtaste, the crew stays small end to end — the person who plans the shoot is the same one behind the camera and in the edit.</p>
+        <p class="eyebrow" style="text-align:center;">Biography</p>
+        <p class="about-bio" style="margin-top:16px; padding:0 12px;">ZUBEK is a Cleveland-based commercial video production company specializing in branded content, music videos, and documentary work, with photography available on request. The studio holds FAA Part 107 certification, and aerial coverage is brought in whenever a production calls for it. Founded and directed by Owen Zubek, whose credits include Trippie Redd, Brooks Running, and Güdtaste, the crew stays small end to end — the person who plans the shoot is the same one behind the camera and in the edit.</p>
 
-        <div class="meta-table" style="margin-top:32px;">
+        <div class="meta-table" style="margin-top:40px;">
           <div class="meta-row"><span>based</span><span>Cleveland, Ohio (41.4993°N, 81.6944°W)</span></div>
           <div class="meta-row"><span>credential</span><span>FAA Part 107 Remote Pilot Certificate</span></div>
           <div class="meta-row"><span>availability</span><span>Nationwide travel</span></div>
           <div class="meta-row"><span>crew</span><span>Direction · cinematography · edit, in-house</span></div>
         </div>
-        <p class="mono" style="margin-top:10px; font-size:11px; color:var(--ink-soft);">Sample copy — a working template for your own bio and process language.</p>
       </div>
     </div>
 
     <div class="about-bottom">
       <div>
-        <p class="eyebrow">Client list</p>
-        <ul class="client-list">
-          <li>Brooks Running</li>
-          <li>Beverage Distributors, Cleveland</li>
-          <li>The Crenshaw Mile</li>
-          <li>DTLR</li>
-          <li>Energi Studios</li>
-          <li>Bucci's J Bella</li>
-          <li>Lauren Varga</li>
-          <li>Mitch Mantra</li>
-          <li>NextGen Restoration</li>
-          <li>Nosotros Rock Climbing</li>
-          <li>Rooted Dental Studio</li>
-          <li>SoulSpace</li>
-          <li>The Crew Has It Podcast</li>
-          <li>Vinny Taylor</li>
-          <li>Vital Chiropractic</li>
-          <li>NuIQ Wellness Lounge and Med Spa</li>
-          <li>ToneHouse Coffee</li>
-          <li>GüdTaste</li>
-          <li>Trippie Redd</li>
-          <li>Square 22</li>
-          <li>WestPark Properties</li>
-          <li>8Point Interiors</li>
-          <li>Cordelia</li>
-          <li>Sparks of Giving</li>
-          <li>Arhaus</li>
-        </ul>
+        <p class="eyebrow" style="text-align:center;">Our clients</p>
+        <div class="client-logos">
+          <div class="logo-cell"><img src="media/clients/brooks-running.png" alt="Brooks Running"></div>
+          <div class="logo-cell"><img src="media/clients/beverage-distributors.png" alt="Beverage Distributors, Cleveland"></div>
+          <div class="logo-cell"><img src="media/clients/crenshaw-mile.webp" alt="The Crenshaw Mile"></div>
+          <div class="logo-cell"><img src="media/clients/dtlr.png" alt="DTLR"></div>
+          <div class="logo-cell"><img src="media/clients/energi-studios.webp" alt="Energi Studios"></div>
+          <div class="logo-cell"><img src="media/clients/nosotros-industries.png" alt="Nosotros Industries"></div>
+          <div class="logo-cell"><img src="media/clients/rooted-dental.png" alt="Rooted Dental Studio"></div>
+          <div class="logo-cell"><img src="media/clients/soulspace.svg" alt="SoulSpace"></div>
+          <div class="logo-cell"><img src="media/clients/crew-has-it.jpg" alt="The Crew Has It Podcast"></div>
+          <div class="logo-cell"><img class="invert" src="media/clients/vinny-taylor.avif" alt="Vinny Taylor"></div>
+          <div class="logo-cell"><img src="media/clients/vital-chiropractic.avif" alt="Vital Chiropractic"></div>
+          <div class="logo-cell"><img src="media/clients/nuiq-wellness.png" alt="NuIQ Wellness Lounge and Med Spa"></div>
+          <div class="logo-cell"><img src="media/clients/tonehouse-coffee.png" alt="ToneHouse Coffee"></div>
+          <div class="logo-cell"><img src="media/clients/gudtaste.png" alt="Güdtaste"></div>
+          <div class="logo-cell"><img src="media/clients/trippie-redd.png" alt="Trippie Redd"></div>
+          <div class="logo-cell"><img src="media/clients/westpark-properties.png" alt="WestPark Properties"></div>
+          <div class="logo-cell"><img src="media/clients/8point-interiors.avif" alt="8Point Interiors"></div>
+          <div class="logo-cell"><img class="invert" src="media/clients/cordelia.png" alt="Cordelia"></div>
+          <div class="logo-cell"><img class="invert" src="media/clients/sparks-of-giving.png" alt="Sparks of Giving"></div>
+          <div class="logo-cell"><img class="invert" src="media/clients/arhaus.png" alt="Arhaus"></div>
+          <div class="logo-cell"><img src="media/clients/bacardi.png" alt="Bacardi"></div>
+        </div>
       </div>
-      <div>
+      <div id="contact" class="contact-block">
         <p class="eyebrow">Contact</p>
-        <p style="margin-top:16px; line-height:1.8;">Email | <a class="link-red" href="mailto:hello@owenzubek.com">hello@owenzubek.com</a><br>Instagram | <a class="link-red" href="http://instagram.com/owenzubek" target="_blank" rel="noopener">@owenzubek</a></p>
+        <p class="contact-email"><a href="mailto:hello@owenzubek.com">hello@owenzubek.com</a></p>
+        <p class="contact-ig">Instagram — <a href="http://instagram.com/owenzubek" target="_blank" rel="noopener">@owenzubek</a></p>
       </div>
     </div>
   </div>
