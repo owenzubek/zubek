@@ -178,15 +178,15 @@
     margin-top:56px; border-top:1px solid var(--line); padding-top:40px; padding-bottom:56px;
   }
   .client-logos{
-    display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-top:28px;
+    display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:28px;
   }
-  @media (max-width:1000px){ .client-logos{ grid-template-columns:repeat(4,1fr); } }
-  @media (max-width:720px){ .client-logos{ grid-template-columns:repeat(3,1fr); } }
-  @media (max-width:480px){ .client-logos{ grid-template-columns:repeat(2,1fr); } }
   .client-logos .logo-cell{
     display:flex; align-items:center; justify-content:center;
-    height:64px; padding:8px;
+    height:64px; padding:8px; flex:0 0 calc(16.666% - 8px);
   }
+  @media (max-width:1000px){ .client-logos .logo-cell{ flex:0 0 calc(25% - 8px); } }
+  @media (max-width:720px){ .client-logos .logo-cell{ flex:0 0 calc(33.333% - 8px); } }
+  @media (max-width:480px){ .client-logos .logo-cell{ flex:0 0 calc(50% - 8px); } }
   .client-logos img{
     max-width:100%; max-height:38px; width:auto; height:auto;
     object-fit:contain; filter:grayscale(1) contrast(1.35) brightness(.9) opacity(.8);
@@ -195,9 +195,6 @@
   .client-logos img.darker{ filter:grayscale(1) contrast(1.8) brightness(.5) opacity(1); }
   .client-logos img[alt="Nosotros Industries"],
   .client-logos img[alt="Cordelia"]{ max-height:52px; }
-  @media (max-width:480px){
-    .client-logos .logo-cell:last-child{ grid-column:1 / -1; }
-  }
   .contact-ribbon{
     background:var(--paper-dim); border-top:3px solid var(--red);
     padding:40px 30px; text-align:center;
@@ -259,7 +256,7 @@
       <div class="portrait-frame"><img class="portrait-img" alt="Owen Zubek on set"></div>
       <div>
         <p class="eyebrow" style="text-align:center;">Biography</p>
-        <p class="about-bio" style="margin-top:16px; padding:0 12px;">ZUBEK is a Cleveland-based commercial video production company specializing in branded content, music videos, and documentary work, with photography available on request. The studio holds FAA Part 107 certification, and aerial coverage is brought in whenever a production calls for it. Founded and directed by Owen Zubek, whose credits include Trippie Redd, Brooks Running, and Güdtaste, the crew stays small end to end — the person who plans the shoot is the same one behind the camera and in the edit.</p>
+        <p class="about-bio" style="margin-top:16px; padding:0 12px;">Zubek Films is a Cleveland-based commercial production company specializing in branded short films, documentaries, and cinematic music videos. Led by director and FAA Part 107 remote pilot Owen Zubek — whose work spans partnerships with Brooks Running and Güdtaste — the studio delivers a lean, agile workflow from concept to completion. You work directly with a team that plans productions, operates the camera on set, and cuts the final edit.</p>
 
         <div class="meta-table" style="margin-top:40px;">
           <div class="meta-row"><span>based</span><span>Cleveland, Ohio (41.4993°N, 81.6944°W)</span></div>
@@ -307,8 +304,6 @@
 
 <!-- ============ CONTACT ============ -->
 <footer class="site-footer">
-  <div class="mono" style="font-size:14px; letter-spacing:.03em;">Email | <a class="link-red" href="mailto:hello@owenzubek.com">hello@owenzubek.com</a></div>
-  <div class="social" style="margin-top:14px;"><a href="http://instagram.com/owenzubek" target="_blank" rel="noopener">Instagram</a></div>
   <div class="legal">ZUBEK | ALL RIGHTS RESERVED 2026 | LOCATION: CLEVELAND, OH / 41.4993° N, 81.6944° W</div>
 </footer>
 
