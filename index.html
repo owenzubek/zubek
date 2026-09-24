@@ -443,7 +443,7 @@
 
   function renderFeed(filter){
     const el = document.getElementById('feed');
-    const items = filter === 'all' ? ALL_ITEMS : ALL_ITEMS.filter(p => p.tag === filter);
+    const items = filter === 'all' ? PROJECTS : ALL_ITEMS.filter(p => p.tag === filter);
     el.innerHTML = items.map(feedItemHTML).join('');
   }
 
