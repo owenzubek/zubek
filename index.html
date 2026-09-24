@@ -483,7 +483,7 @@
   }
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeReel(); });
 
-  const GALLERY = Array.from({length:32}, (_,i) => {
+  const GALLERY = Array.from({length:83}, (_,i) => {
     const n = String(i+1).padStart(2,'0');
     return { thumb:`media/gallery/thumb/gallery-${n}.jpg`, full:`media/gallery/full/gallery-${n}.jpg` };
   });
