@@ -181,6 +181,29 @@
     position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
     font-family:var(--font-mono); font-size:12px; letter-spacing:.08em; color:rgba(232,227,214,.6);
   }
+  .photo-tab{
+    position:fixed; right:0; top:50%; transform:translateY(-50%);
+    writing-mode:vertical-rl; text-orientation:mixed;
+    font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    background:var(--ink); color:var(--paper); border:1px solid rgba(232,227,214,.25); border-right:0;
+    padding:18px 9px; cursor:pointer; z-index:110;
+    transition:background .2s ease, color .2s ease;
+  }
+  .photo-tab:hover{ background:var(--red); color:var(--paper); }
+  .gallery-page{
+    position:fixed; inset:0; z-index:400; background:var(--paper);
+    overflow-y:auto; opacity:0; visibility:hidden; transition:opacity .25s ease;
+    padding:100px 0 60px;
+  }
+  .gallery-page.open{ opacity:1; visibility:visible; }
+  .gallery-page-close{
+    position:fixed; top:22px; right:22px; z-index:410; width:44px; height:44px; border-radius:50%;
+    border:1px solid var(--line); background:var(--paper); color:var(--ink);
+    font-size:22px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .gallery-page-close:hover{ border-color:var(--red); color:var(--red); }
 
   /* ================= WORK grid ================= */
   .wrap-wide{ max-width:1400px; margin:0 auto; padding:0 28px; }
@@ -290,23 +313,34 @@
     <span></span><span></span><span></span>
   </button>
   <div class="nav-links" id="navLinks">
-    <a href="#hero" onclick="openReel(event)"><span class="n">01.</span>Reel</a>
+    <a href="#hero" onclick="openVideo(REEL_YT_ID, event)"><span class="n">01.</span>Reel</a>
     <a href="#work"><span class="n">02.</span>Work</a>
-    <a href="#gallery"><span class="n">03.</span>Photos</a>
-    <a href="#about"><span class="n">04.</span>About</a>
+    <a href="#about"><span class="n">03.</span>About</a>
     <a href="#contact" class="cta">Start a Project</a>
   </div>
 </nav>
 
-<!-- ============ REEL OVERLAY ============ -->
+<!-- ============ VIDEO OVERLAY ============ -->
 <div class="reel-overlay" id="reelOverlay">
-  <button class="reel-close" aria-label="Close reel" onclick="closeReel()">&times;</button>
+  <button class="reel-close" aria-label="Close video" onclick="closeVideo()">&times;</button>
   <div class="reel-frame"></div>
 </div>
 
-<!-- ============ GALLERY OVERLAY ============ -->
+<!-- ============ PHOTOGRAPHY TAB ============ -->
+<button class="photo-tab" onclick="openGalleryPage()">Photography</button>
+
+<!-- ============ PHOTOGRAPHY PAGE ============ -->
+<div class="gallery-page" id="galleryPage">
+  <button class="gallery-page-close" aria-label="Close photography" onclick="closeGalleryPage()">&times;</button>
+  <div class="wrap-wide">
+    <p class="eyebrow" style="text-align:center;">Photography</p>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</div>
+
+<!-- ============ GALLERY LIGHTBOX ============ -->
 <div class="gallery-overlay" id="galleryOverlay">
-  <button class="gallery-close" aria-label="Close gallery" onclick="closeGallery()">&times;</button>
+  <button class="gallery-close" aria-label="Close photo" onclick="closeGallery()">&times;</button>
   <button class="gallery-nav prev" aria-label="Previous photo" onclick="navGallery(-1)">&#8249;</button>
   <button class="gallery-nav next" aria-label="Next photo" onclick="navGallery(1)">&#8250;</button>
   <img id="galleryImg" src="" alt="">
@@ -324,14 +358,6 @@
   <div class="filters" id="filters"></div>
   <div class="wrap-wide">
     <div class="work-grid" id="feed"></div>
-  </div>
-</section>
-
-<!-- ============ GALLERY ============ -->
-<section id="gallery" style="padding-top:90px;">
-  <div class="wrap-wide">
-    <p class="eyebrow" style="text-align:center;">Photography</p>
-    <div class="gallery-grid" id="galleryGrid"></div>
   </div>
 </section>
 
@@ -426,7 +452,7 @@
         <source src="media/${p.video}.mp4" type="video/mp4">
       </video>`;
     } else if(p.youtube){
-      frame = `<div class="feed-frame yt-frame" data-yt="${p.youtube}" onclick="loadYouTube(this)">
+      frame = `<div class="feed-frame yt-frame" data-yt="${p.youtube}" onclick="openVideo('${p.youtube}')">
         <img src="media/work-thumbs/${p.youtube}.jpg" alt="">
         <span class="yt-play" aria-hidden="true"></span>
       </div>`;
@@ -440,11 +466,6 @@
         <div class="feed-meta">${TAG_LABELS[p.tag]}</div>
       </div>
     </div>`;
-  }
-
-  function loadYouTube(el){
-    const id = el.dataset.yt;
-    el.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" title="YouTube video" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
   }
 
   function renderFeed(filter){
@@ -467,21 +488,21 @@
   renderFeed('all');
 
   const REEL_YT_ID = 'Y2CTkzqEmSQ';
-  function openReel(e){
+  function openVideo(id, e){
     if(e) e.preventDefault();
     const overlay = document.getElementById('reelOverlay');
     overlay.querySelector('.reel-frame').innerHTML =
-      `<iframe src="https://www.youtube.com/embed/${REEL_YT_ID}?autoplay=1&rel=0&cc_load_policy=0&modestbranding=1&iv_load_policy=3" title="Reel" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+      `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&cc_load_policy=0&modestbranding=1&iv_load_policy=3" title="Video" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     overlay.classList.add('open');
     document.body.classList.add('reel-open');
   }
-  function closeReel(){
+  function closeVideo(){
     const overlay = document.getElementById('reelOverlay');
     overlay.classList.remove('open');
     overlay.querySelector('.reel-frame').innerHTML = '';
     document.body.classList.remove('reel-open');
   }
-  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeReel(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeVideo(); });
 
   const GALLERY = Array.from({length:83}, (_,i) => {
     const n = String(i+1).padStart(2,'0');
@@ -516,7 +537,20 @@
     if(e.key === 'ArrowLeft') navGallery(-1);
     if(e.key === 'ArrowRight') navGallery(1);
   });
-  renderGallery();
+  function openGalleryPage(){
+    renderGallery();
+    document.getElementById('galleryPage').classList.add('open');
+    document.body.classList.add('reel-open');
+  }
+  function closeGalleryPage(){
+    document.getElementById('galleryPage').classList.remove('open');
+    document.body.classList.remove('reel-open');
+  }
+  document.addEventListener('keydown', e => {
+    if(e.key !== 'Escape') return;
+    if(document.getElementById('galleryOverlay').classList.contains('open')) return;
+    if(document.getElementById('galleryPage').classList.contains('open')) closeGalleryPage();
+  });
 
   function toggleNav(){
     const nav = document.getElementById('navLinks');
