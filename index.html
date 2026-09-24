@@ -142,6 +142,46 @@
   }
   .reel-close:hover{ border-color:var(--red); color:var(--red); }
 
+  /* ================= GALLERY ================= */
+  .gallery-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:4px; margin-top:28px; }
+  @media (max-width:1000px){ .gallery-grid{ grid-template-columns:repeat(4,1fr); } }
+  @media (max-width:560px){ .gallery-grid{ grid-template-columns:repeat(3,1fr); gap:3px; } }
+  .gallery-grid .g-cell{
+    position:relative; aspect-ratio:1/1; overflow:hidden; cursor:pointer; background:var(--ink);
+  }
+  .gallery-grid .g-cell img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    transition:transform .3s ease;
+  }
+  .gallery-grid .g-cell:hover img{ transform:scale(1.06); }
+  .gallery-overlay{
+    position:fixed; inset:0; z-index:500; background:rgba(10,9,7,.96);
+    opacity:0; visibility:hidden; transition:opacity .25s ease;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .gallery-overlay.open{ opacity:1; visibility:visible; }
+  .gallery-overlay img{ max-width:90vw; max-height:86vh; object-fit:contain; user-select:none; }
+  .gallery-close{
+    position:absolute; top:22px; right:22px; z-index:10; width:44px; height:44px; border-radius:50%;
+    border:1px solid rgba(232,227,214,.4); background:rgba(21,19,14,.4);
+    color:var(--paper); font-size:22px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .gallery-close:hover{ border-color:var(--red); color:var(--red); }
+  .gallery-nav{
+    position:absolute; top:0; bottom:0; width:15%; display:flex; align-items:center;
+    cursor:pointer; color:rgba(232,227,214,.55); font-size:32px; background:transparent; border:0;
+    transition:color .2s ease;
+  }
+  .gallery-nav:hover{ color:var(--red); }
+  .gallery-nav.prev{ left:0; justify-content:flex-start; padding-left:18px; }
+  .gallery-nav.next{ right:0; justify-content:flex-end; padding-right:18px; }
+  .gallery-counter{
+    position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+    font-family:var(--font-mono); font-size:12px; letter-spacing:.08em; color:rgba(232,227,214,.6);
+  }
+
   /* ================= WORK grid ================= */
   .wrap-wide{ max-width:1400px; margin:0 auto; padding:0 28px; }
   .filters{ display:flex; justify-content:center; gap:32px; flex-wrap:wrap; padding:28px 0; border-bottom:1px solid var(--line); }
@@ -252,7 +292,8 @@
   <div class="nav-links" id="navLinks">
     <a href="#hero" onclick="openReel(event)"><span class="n">01.</span>Reel</a>
     <a href="#work"><span class="n">02.</span>Work</a>
-    <a href="#about"><span class="n">03.</span>About</a>
+    <a href="#gallery"><span class="n">03.</span>Photos</a>
+    <a href="#about"><span class="n">04.</span>About</a>
     <a href="#contact" class="cta">Start a Project</a>
   </div>
 </nav>
@@ -261,6 +302,15 @@
 <div class="reel-overlay" id="reelOverlay">
   <button class="reel-close" aria-label="Close reel" onclick="closeReel()">&times;</button>
   <div class="reel-frame"></div>
+</div>
+
+<!-- ============ GALLERY OVERLAY ============ -->
+<div class="gallery-overlay" id="galleryOverlay">
+  <button class="gallery-close" aria-label="Close gallery" onclick="closeGallery()">&times;</button>
+  <button class="gallery-nav prev" aria-label="Previous photo" onclick="navGallery(-1)">&#8249;</button>
+  <button class="gallery-nav next" aria-label="Next photo" onclick="navGallery(1)">&#8250;</button>
+  <img id="galleryImg" src="" alt="">
+  <div class="gallery-counter" id="galleryCounter"></div>
 </div>
 
 <!-- ============ HERO ============ -->
@@ -274,6 +324,14 @@
   <div class="filters" id="filters"></div>
   <div class="wrap-wide">
     <div class="work-grid" id="feed"></div>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section id="gallery" style="padding-top:90px;">
+  <div class="wrap-wide">
+    <p class="eyebrow" style="text-align:center;">Photography</p>
+    <div class="gallery-grid" id="galleryGrid"></div>
   </div>
 </section>
 
@@ -424,6 +482,41 @@
     document.body.classList.remove('reel-open');
   }
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeReel(); });
+
+  const GALLERY = Array.from({length:32}, (_,i) => {
+    const n = String(i+1).padStart(2,'0');
+    return { thumb:`media/gallery/thumb/gallery-${n}.jpg`, full:`media/gallery/full/gallery-${n}.jpg` };
+  });
+  let galleryIndex = 0;
+  function renderGallery(){
+    const el = document.getElementById('galleryGrid');
+    el.innerHTML = GALLERY.map((g,i) => `<div class="g-cell" onclick="openGallery(${i})"><img src="${g.thumb}" loading="lazy" alt="Photo ${i+1}"></div>`).join('');
+  }
+  function updateGalleryImg(){
+    document.getElementById('galleryImg').src = GALLERY[galleryIndex].full;
+    document.getElementById('galleryCounter').textContent = `${galleryIndex+1} / ${GALLERY.length}`;
+  }
+  function openGallery(i){
+    galleryIndex = i;
+    updateGalleryImg();
+    document.getElementById('galleryOverlay').classList.add('open');
+    document.body.classList.add('reel-open');
+  }
+  function closeGallery(){
+    document.getElementById('galleryOverlay').classList.remove('open');
+    document.body.classList.remove('reel-open');
+  }
+  function navGallery(delta){
+    galleryIndex = (galleryIndex + delta + GALLERY.length) % GALLERY.length;
+    updateGalleryImg();
+  }
+  document.addEventListener('keydown', e => {
+    if(!document.getElementById('galleryOverlay').classList.contains('open')) return;
+    if(e.key === 'Escape') closeGallery();
+    if(e.key === 'ArrowLeft') navGallery(-1);
+    if(e.key === 'ArrowRight') navGallery(1);
+  });
+  renderGallery();
 
   function toggleNav(){
     const nav = document.getElementById('navLinks');
