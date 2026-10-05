@@ -189,9 +189,11 @@
   .work-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:36px 28px; padding:40px 0 64px; }
   @media (max-width:1000px){ .work-grid{ grid-template-columns:repeat(2,1fr); } }
   @media (max-width:560px){ .work-grid{ grid-template-columns:1fr; gap:32px; } }
-  .work-grid.photo-mode{ grid-template-columns:repeat(4,1fr); gap:8px; }
-  @media (max-width:1000px){ .work-grid.photo-mode{ grid-template-columns:repeat(3,1fr); gap:6px; } }
-  @media (max-width:560px){ .work-grid.photo-mode{ grid-template-columns:repeat(3,1fr); gap:4px; } }
+  .work-grid.photo-mode{ display:flex; flex-wrap:wrap; gap:6px; --row-h:260px; }
+  .work-grid.photo-mode::after{ content:""; flex-grow:100; }
+  .work-grid.photo-mode .feed-item{ flex:calc(var(--r) * 100) 1 calc(var(--r) * var(--row-h)); min-width:0; }
+  @media (max-width:1000px){ .work-grid.photo-mode{ --row-h:200px; } }
+  @media (max-width:560px){ .work-grid.photo-mode{ gap:3px; --row-h:120px; } }
   .feed-frame{
     position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; display:block; background:#000;
   }
@@ -205,8 +207,8 @@
   .yt-frame[data-yt="qhV2sxE7ZHc"] img{ object-position:left center; }
   .feed-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
   .yt-frame{ cursor:pointer; background:#000; }
-  .photo-frame{ cursor:pointer; aspect-ratio:4/5; background:var(--paper-dim); }
-  .feed-frame.photo-frame img{ object-fit:contain; transition:transform .3s ease; }
+  .photo-frame{ cursor:pointer; background:var(--paper-dim); }
+  .feed-frame.photo-frame img{ object-fit:cover; transition:transform .3s ease; }
   .photo-frame:hover img{ transform:scale(1.05); }
   .yt-play{
     position:absolute; inset:0; margin:auto; width:0; height:0;
@@ -387,6 +389,7 @@
     return { thumb:`media/gallery/thumb/gallery-${n}.jpg`, full:`media/gallery/full/gallery-${n}.jpg` };
   });
   let galleryIndex = 0;
+  const PHOTO_RATIOS = [0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,1.616,0.8,0.8,0.8,0.657,0.8,0.8,1.25,0.8,1.911,0.8,1.779,0.8,1.619,0.8,1.5,1.779,1.5,1.5,1.25,0.8,2.041,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,1.25,1.5,0.8,1.5,0.8,1.751,0.8,1.5,0.562,0.8,1.779,0.798,0.8,0.8,0.734,0.8,0.8,1.493,0.8,1.203,2.123,0.701,1.503,0.8,0.667,0.849,0.562,0.8,0.667,0.8,1.554,1.607,0.667,0.8,0.8,0.8,0.8,0.8,0.8,1.007,0.667,0.75,0.8];
 
   const PROJECTS = [
     {client:"Denzel Ward", title:"Union Home Mortgage Campaign", location:"The James Douglas Studio, Cleveland, OH", tag:"branded", year:"2021", youtube:"wwcwJFIEa8w"},
@@ -411,8 +414,9 @@
 
   function feedItemHTML(p){
     if(p.photoIdx !== undefined){
-      return `<div class="feed-item" data-tag="photography">
-        <div class="feed-frame photo-frame" onclick="openGallery(${p.photoIdx})">
+      const r = PHOTO_RATIOS[p.photoIdx];
+      return `<div class="feed-item" data-tag="photography" style="--r:${r}">
+        <div class="feed-frame photo-frame" style="aspect-ratio:${r}" onclick="openGallery(${p.photoIdx})">
           <img src="${GALLERY[p.photoIdx].thumb}" loading="lazy" alt="Photo ${p.photoIdx+1}">
         </div>
       </div>`;
