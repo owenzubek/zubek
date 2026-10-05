@@ -254,17 +254,27 @@
   .client-logos img[alt="Sparks of Giving"],
   .client-logos img[alt="The Crew Has It Podcast"]{ max-height:58px; }
   .contact-ribbon{
-    background:var(--paper-dim); border-top:3px solid var(--red);
-    padding:40px 30px; text-align:center;
+    background:var(--ink); color:var(--paper); border-top:3px solid var(--red);
+    padding:clamp(64px,10vw,110px) 24px; text-align:center;
   }
-  .contact-email{ margin-top:14px; }
-  .contact-email a{
-    font-family:var(--font-display); font-weight:900; font-size:clamp(20px,2.4vw,28px);
-    color:var(--ink); text-decoration:none; border-bottom:2px solid var(--red);
+  .contact-eyebrow{ font-family:var(--font-mono); font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--red); }
+  .contact-title{
+    margin-top:18px; font-family:var(--font-display); font-weight:900; text-transform:uppercase;
+    font-size:clamp(40px,8vw,96px); line-height:.95; letter-spacing:-.01em;
   }
-  .contact-email a:hover{ color:var(--red); }
-  .contact-ig{ margin-top:12px; font-family:var(--font-mono); font-size:13px; color:var(--ink-soft); }
-  .contact-ig a{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line); }
+  .contact-sub{ margin:20px auto 0; max-width:46ch; font-size:clamp(15px,1.8vw,18px); line-height:1.55; color:rgba(232,227,214,.75); }
+  .contact-btn{
+    display:inline-block; margin-top:34px; padding:20px clamp(28px,5vw,54px);
+    background:var(--red); color:#fff; text-decoration:none;
+    font-family:var(--font-mono); font-size:clamp(13px,1.6vw,16px); letter-spacing:.14em; text-transform:uppercase;
+    border:2px solid var(--red); transition:background .2s ease, color .2s ease;
+  }
+  .contact-btn:hover{ background:transparent; color:var(--red); }
+  .contact-email{ margin-top:22px; font-family:var(--font-mono); font-size:14px; letter-spacing:.04em; }
+  .contact-email a{ color:var(--paper); text-decoration:none; border-bottom:1px solid rgba(232,227,214,.4); }
+  .contact-email a:hover{ color:var(--red); border-color:var(--red); }
+  .contact-ig{ margin-top:40px; font-family:var(--font-mono); font-size:12px; letter-spacing:.06em; color:rgba(232,227,214,.55); }
+  .contact-ig a{ color:rgba(232,227,214,.85); text-decoration:none; border-bottom:1px solid rgba(232,227,214,.3); }
   .contact-ig a:hover{ color:var(--red); border-color:var(--red); }
   .meta-row{ display:flex; justify-content:center; gap:16px; padding:13px 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:12px; }
   .meta-row span:first-child{ flex:0 0 130px; text-align:right; color:var(--ink-soft); text-transform:lowercase; letter-spacing:.06em; }
@@ -368,8 +378,11 @@
   </div>
 
   <div id="contact" class="contact-ribbon">
-    <p class="eyebrow">Contact</p>
-    <p class="contact-email"><a href="mailto:hello@owenzubek.com">hello@owenzubek.com</a></p>
+    <p class="contact-eyebrow">Let's work together</p>
+    <h2 class="contact-title">Start a project</h2>
+    <p class="contact-sub">Have a brand film, music video, or campaign in mind? Tell me about it — I reply to every email.</p>
+    <a class="contact-btn" href="mailto:owenzubek@gmail.com?subject=Start%20a%20project">Email me &rarr;</a>
+    <p class="contact-email">or write directly: <a href="mailto:owenzubek@gmail.com">owenzubek@gmail.com</a></p>
     <p class="contact-ig">Instagram — <a href="http://instagram.com/owenzubek" target="_blank" rel="noopener">@owenzubek</a></p>
   </div>
 </section>
